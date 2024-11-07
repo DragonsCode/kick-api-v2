@@ -1,9 +1,9 @@
-import requests
-
+from curl_cffi.requests import AsyncSession
+import certifi
 from kickapi.objects import User
 
-def get_user(username: str, headers: dict, session: requests.Session, api_url: str = "https://kick.com/api/v2") -> User:
-    r = session.get(f"{api_url}/channels/{username}", headers=headers)
+async def get_user(username: str, session: AsyncSession, cookies=None, api_url: str = "https://kick.com/api/v2") -> User:
+    r = await session.get(f"{api_url}/channels/{username}", cookies=cookies, verify=certifi.where())
     data = r.json()
     user = User(**data["user"])
     return user
